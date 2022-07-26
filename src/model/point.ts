@@ -12,4 +12,7 @@ export interface Point {
 	 * The y coordinate.
 	 */
 	readonly y: Coordinate;
+
+	shiftKey?: boolean;
+	ctrlKey?: boolean;
 }

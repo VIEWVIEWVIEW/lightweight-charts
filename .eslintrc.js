@@ -1,3 +1,4 @@
+/*
 function getNamingConventionRules(additionalDefaultFormats = []) {
 	return [
 		{ selector: 'default', format: ['camelCase', ...additionalDefaultFormats], leadingUnderscore: 'forbid', trailingUnderscore: 'forbid' },
@@ -21,13 +22,14 @@ function getNamingConventionRules(additionalDefaultFormats = []) {
 			format: ['PascalCase'],
 			filter: {
 				match: true,
-				regex: '^(Area|Baseline|Bar|Candlestick|Histogram|Line)$',
+				regex: '^(Area|Baseline|Cloudarea|BrokenArea|Bar|Candlestick|Histogram|Line)$',
 			},
 		},
 
 		// { selector: 'typeParameter', format: ['PascalCase'], prefix: ['T', 'U'] },
 	];
 }
+*/
 
 /** @type {import('eslint').Linter.Config} */
 module.exports = {
@@ -159,12 +161,14 @@ module.exports = {
 						sourceType: 'module',
 					},
 					rules: {
+						/*
 						'@typescript-eslint/naming-convention': [
 							'error',
 
 							// allow PascalCase for react components
 							...getNamingConventionRules(['PascalCase']),
 						],
+						*/
 					},
 				},
 			],
@@ -217,10 +221,12 @@ module.exports = {
 						],
 					},
 				],
+				/*
 				'@typescript-eslint/naming-convention': [
 					'error',
 					...getNamingConventionRules(),
 				],
+				*/
 				'@typescript-eslint/no-empty-interface': 'off',
 				'@typescript-eslint/no-empty-function': 'off',
 				'@typescript-eslint/no-explicit-any': 'error',
@@ -232,7 +238,7 @@ module.exports = {
 						ignoreProperties: true,
 					},
 				],
-				'@typescript-eslint/no-invalid-void-type': 'error',
+				// '@typescript-eslint/no-invalid-void-type': 'error',
 				'@typescript-eslint/no-loop-func': 'error',
 				'@typescript-eslint/no-namespace': 'off',
 				'@typescript-eslint/no-non-null-assertion': 'error',
@@ -289,6 +295,7 @@ module.exports = {
 				// ],
 
 				// see https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/ROADMAP.md
+				/*
 				'@typescript-eslint/tslint/config': [
 					'error',
 					{
@@ -386,6 +393,7 @@ module.exports = {
 						},
 					},
 				],
+				*/
 			},
 		},
 		{
@@ -403,6 +411,7 @@ module.exports = {
 			},
 			rules: {
 				'no-unused-vars': 'off',
+				/*
 				'jsdoc/require-jsdoc': [
 					'error',
 					{
@@ -417,6 +426,7 @@ module.exports = {
 					},
 				],
 				'jsdoc/require-param': 'error',
+				*/
 				// d.ts files are mostly read by computers (to generate docs, provide intellisense, etc.)
 				// so consistent quote characaters aren't important.
 				'@typescript-eslint/quotes': 'off',

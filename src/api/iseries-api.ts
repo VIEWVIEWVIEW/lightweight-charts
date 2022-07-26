@@ -231,6 +231,16 @@ export interface ISeriesApi<TSeriesType extends SeriesType> {
 	removePriceLine(line: IPriceLine): void;
 
 	/**
+	 * Removes all existing price line
+	 */
+	removeAllPriceLines(): IPriceLine | void;
+
+	/**
+	 * Get price line at (or near) a given price
+	 */
+	getPriceLine(price: number, index?: number): IPriceLine | void;
+
+	/**
 	 * Return current series type.
 	 *
 	 * @returns Type of the series.
@@ -244,4 +254,5 @@ export interface ISeriesApi<TSeriesType extends SeriesType> {
 	 * ```
 	 */
 	seriesType(): TSeriesType;
+	setExtensionsBoundaries(extensionsBoundaries: { [id: string]: number }): void;
 }

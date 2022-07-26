@@ -3,6 +3,7 @@ import {
 	BarStyleOptions,
 	BaselineStyleOptions,
 	CandlestickStyleOptions,
+	CloudAreaStyleOptions,
 	HistogramStyleOptions,
 	LastPriceAnimationMode,
 	LineStyleOptions,
@@ -55,6 +56,23 @@ export const areaStyleDefaults: AreaStyleOptions = {
 	crosshairMarkerBorderColor: '',
 	crosshairMarkerBackgroundColor: '',
 	lastPriceAnimation: LastPriceAnimationMode.Disabled,
+};
+
+export const cloudAreaStyleDefaults: CloudAreaStyleOptions = {
+	positiveColor: 'rgba( 76, 175, 80, 0.1)',
+	negativeColor: 'rgba( 255, 82, 82, 0.1)',
+	higherLineColor: '#4CAF50',
+	higherLineStyle: 0,
+	higherLineWidth: 3,
+	higherLineType: 0,
+	lowerLineColor: '#FF5252',
+	lowerLineStyle: 0,
+	lowerLineWidth: 3,
+	lowerLineType: 0,
+	crosshairMarkerVisible: true,
+	crosshairMarkerRadius: 4,
+	crosshairMarkerBorderColor: '',
+	crosshairMarkerBackgroundColor: '',
 };
 
 export const baselineStyleDefaults: BaselineStyleOptions = {

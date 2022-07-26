@@ -16,8 +16,12 @@ import {
 	BarSeriesPartialOptions,
 	BaselineSeriesOptions,
 	BaselineSeriesPartialOptions,
+	BrokenAreaSeriesOptions,
+	BrokenAreaSeriesPartialOptions,
 	CandlestickSeriesOptions,
 	CandlestickSeriesPartialOptions,
+	CloudAreaSeriesOptions,
+	CloudAreaSeriesPartialOptions,
 	fillUpDownCandlesticksColors,
 	HistogramSeriesOptions,
 	HistogramSeriesPartialOptions,
@@ -42,6 +46,7 @@ import {
 	barStyleDefaults,
 	baselineStyleDefaults,
 	candlestickStyleDefaults,
+	cloudAreaStyleDefaults,
 	histogramStyleDefaults,
 	lineStyleDefaults,
 	seriesOptionsDefaults,
@@ -238,6 +243,33 @@ export class ChartApi implements IChartApi, DataUpdatesConsumer<SeriesType> {
 		return res;
 	}
 
+	public addCloudAreaSeries(options: CloudAreaSeriesPartialOptions = {}): ISeriesApi<'CloudArea'> {
+		options = migrateOptions(options);
+		patchPriceFormat(options.priceFormat);
+
+		const strictOptions = merge(clone(seriesOptionsDefaults), cloudAreaStyleDefaults, options) as CloudAreaSeriesOptions;
+		const series = this._chartWidget.model().createSeries('CloudArea', strictOptions);
+
+		const res = new SeriesApi<'CloudArea'>(series, this, this);
+		this._seriesMap.set(res, series);
+		this._seriesMapReversed.set(series, res);
+
+		return res;
+	}
+
+	public addBrokenAreaSeries(options: BrokenAreaSeriesPartialOptions = {}): ISeriesApi<'BrokenArea'> {
+		options = migrateOptions(options);
+
+		const strictOptions = merge(clone(seriesOptionsDefaults), options) as BrokenAreaSeriesOptions;
+		const series = this._chartWidget.model().createSeries('BrokenArea', strictOptions);
+
+		const res = new SeriesApi<'BrokenArea'>(series, this, this);
+		this._seriesMap.set(res, series);
+		this._seriesMapReversed.set(series, res);
+
+		return res;
+	}
+
 	public addBarSeries(options: BarSeriesPartialOptions = {}): ISeriesApi<'Bar'> {
 		options = migrateOptions(options);
 		patchPriceFormat(options.priceFormat);
@@ -332,6 +364,10 @@ export class ChartApi implements IChartApi, DataUpdatesConsumer<SeriesType> {
 		this._crosshairMovedDelegate.unsubscribe(handler);
 	}
 
+	public clearCrosshairPosition(): void {
+		this._chartWidget.model().clearCurrentPosition();
+	}
+
 	public priceScale(priceScaleId?: string): IPriceScaleApi {
 		if (priceScaleId === undefined) {
 			warn('Using ChartApi.priceScale() method without arguments has been deprecated, pass valid price scale id instead');
@@ -355,6 +391,10 @@ export class ChartApi implements IChartApi, DataUpdatesConsumer<SeriesType> {
 
 	public takeScreenshot(): HTMLCanvasElement {
 		return this._chartWidget.takeScreenshot();
+	}
+
+	public fullUpdate(): void {
+		return this._chartWidget.model().fullUpdate();
 	}
 
 	private _sendUpdateToChart(update: DataUpdateResponse): void {

@@ -3,7 +3,7 @@ import { SeriesPlotRow } from '../model/series-data';
 import { SeriesType } from '../model/series-options';
 import { TimePoint, TimePointIndex } from '../model/time-data';
 
-import { BarData, CandlestickData, HistogramData, isWhitespaceData, LineData, SeriesDataItemTypeMap } from './data-consumer';
+import { BarData, BrokenCloudAreaData, CandlestickData, CloudAreaData, HistogramData, isWhitespaceData, LineData, SeriesDataItemTypeMap } from './data-consumer';
 
 function getLineBasedSeriesPlotRow(time: TimePoint, index: TimePointIndex, item: LineData | HistogramData): Mutable<SeriesPlotRow<'Area' | 'Baseline'>> {
 	const val = item.value;
@@ -60,6 +60,32 @@ function getCandlestickSeriesPlotRow(time: TimePoint, index: TimePointIndex, ite
 	return res;
 }
 
+function getCloudAreaBasedSeriesPlotRow(time: TimePoint, index: TimePointIndex, item: CloudAreaData): Mutable<SeriesPlotRow<'CloudArea'>> {
+	return { index, time, value: [item.higherValue, item.higherValue, item.lowerValue, item.lowerValue] };
+}
+
+function getBrokenAreaBasedSeriesPlotRow(time: TimePoint, index: TimePointIndex, item: BrokenCloudAreaData): Mutable<SeriesPlotRow<'BrokenArea'>> {
+	const res: Mutable<SeriesPlotRow<'BrokenArea'>> = { index, time, value: [item.higherValue, item.higherValue, item.lowerValue, item.lowerValue] };
+
+	if (typeof item.color !== 'undefined') {
+		res.color = item.color;
+	}
+
+	if (typeof item.label !== 'undefined') {
+		res.label = item.label;
+	}
+
+	if (typeof item.extendRight !== 'undefined') {
+		res.extendRight = item.extendRight;
+	}
+
+	if (typeof item.id !== 'undefined') {
+		res.id = item.id;
+	}
+
+	return res;
+}
+
 export type WhitespacePlotRow = Omit<PlotRow, 'value'>;
 
 export function isSeriesPlotRow(row: SeriesPlotRow | WhitespacePlotRow): row is SeriesPlotRow {
@@ -76,7 +102,7 @@ type SeriesItemValueFnMap = {
 
 export type TimedSeriesItemValueFn = (time: TimePoint, index: TimePointIndex, item: SeriesDataItemTypeMap[SeriesType]) => Mutable<SeriesPlotRow | WhitespacePlotRow>;
 
-function wrapWhitespaceData(createPlotRowFn: (typeof getLineBasedSeriesPlotRow) | (typeof getBarSeriesPlotRow) | (typeof getCandlestickSeriesPlotRow)): TimedSeriesItemValueFn {
+function wrapWhitespaceData(createPlotRowFn: (typeof getLineBasedSeriesPlotRow) | (typeof getBarSeriesPlotRow) | (typeof getCandlestickSeriesPlotRow) | (typeof getCloudAreaBasedSeriesPlotRow) | (typeof getBrokenAreaBasedSeriesPlotRow)): TimedSeriesItemValueFn {
 	return (time: TimePoint, index: TimePointIndex, bar: SeriesDataItemTypeMap[SeriesType]) => {
 		if (isWhitespaceData(bar)) {
 			return { time, index };
@@ -91,6 +117,8 @@ const seriesPlotRowFnMap: SeriesItemValueFnMap = {
 	Bar: wrapWhitespaceData(getBarSeriesPlotRow),
 	Area: wrapWhitespaceData(getLineBasedSeriesPlotRow),
 	Baseline: wrapWhitespaceData(getLineBasedSeriesPlotRow),
+	CloudArea: wrapWhitespaceData(getCloudAreaBasedSeriesPlotRow),
+	BrokenArea: wrapWhitespaceData(getBrokenAreaBasedSeriesPlotRow),
 	Histogram: wrapWhitespaceData(getColoredLineBasedSeriesPlotRow),
 	Line: wrapWhitespaceData(getColoredLineBasedSeriesPlotRow),
 };

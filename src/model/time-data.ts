@@ -118,6 +118,13 @@ export interface TimedValue {
 	x: Coordinate;
 }
 
+export interface TimedRange {
+	id?: string;
+	time: TimePointIndex;
+	x: Coordinate;
+	end: Coordinate;
+}
+
 export type SeriesItemsIndexesRange = Range<number>;
 
 function lowerBoundItemsCompare(item: TimedValue, time: TimePointIndex): boolean {

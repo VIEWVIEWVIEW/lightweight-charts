@@ -10,6 +10,7 @@ export interface HorizontalLineRendererData {
 	lineWidth: LineWidth;
 
 	y: Coordinate;
+	x?: Coordinate;
 	visible?: boolean;
 	width: number;
 }
@@ -36,11 +37,17 @@ export class HorizontalLineRenderer implements IPaneRenderer {
 			return;
 		}
 
+		let x = 0;
+
+		if (this._data.x !== undefined) {
+			x = Math.round(this._data.x * pixelRatio);
+		}
+
 		const width = Math.ceil(this._data.width * pixelRatio);
 		ctx.lineCap = 'butt';
 		ctx.strokeStyle = this._data.color;
 		ctx.lineWidth = Math.floor(this._data.lineWidth * pixelRatio);
 		setLineStyle(ctx, this._data.lineStyle);
-		drawHorizontalLine(ctx, y, 0, width);
+		drawHorizontalLine(ctx, y, x, width);
 	}
 }

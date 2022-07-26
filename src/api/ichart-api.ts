@@ -8,7 +8,9 @@ import {
 	AreaSeriesPartialOptions,
 	BarSeriesPartialOptions,
 	BaselineSeriesPartialOptions,
+	BrokenAreaSeriesPartialOptions,
 	CandlestickSeriesPartialOptions,
+	CloudAreaSeriesPartialOptions,
 	HistogramSeriesPartialOptions,
 	LineSeriesPartialOptions,
 	SeriesType,
@@ -99,6 +101,22 @@ export interface IChartApi {
 	 * ```
 	 */
 	addBaselineSeries(baselineOptions?: BaselineSeriesPartialOptions): ISeriesApi<'Baseline'>;
+
+	/**
+	 * Creates an cloud area series with specified parameters
+	 *
+	 * @param areaOptions - customization parameters of the series being created
+	 * @returns an interface of the created series
+	 */
+	addCloudAreaSeries(areaOptions?: CloudAreaSeriesPartialOptions): ISeriesApi<'CloudArea'>;
+
+	/**
+	 * Creates an cloud area series with specified parameters
+	 *
+	 * @param areaOptions - customization parameters of the series being created
+	 * @returns an interface of the created series
+	 */
+	addBrokenAreaSeries(areaOptions?: BrokenAreaSeriesPartialOptions): ISeriesApi<'BrokenArea'>;
 
 	/**
 	 * Creates a bar series with specified parameters.
@@ -219,6 +237,11 @@ export interface IChartApi {
 	unsubscribeCrosshairMove(handler: MouseEventHandler): void;
 
 	/**
+	 * Clear crosshair position
+	 */
+	clearCrosshairPosition(): void;
+
+	/**
 	 * Returns API to manipulate a price scale.
 	 *
 	 * @param priceScaleId - ID of the price scale.
@@ -253,4 +276,10 @@ export interface IChartApi {
 	 * @returns A canvas with the chart drawn on. Any `Canvas` methods like `toDataURL()` or `toBlob()` can be used to serialize the result.
 	 */
 	takeScreenshot(): HTMLCanvasElement;
+
+	/**
+	 * Trigger an full update.
+	 *
+	 */
+	fullUpdate(): void;
 }

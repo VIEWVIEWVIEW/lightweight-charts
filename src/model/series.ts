@@ -10,7 +10,9 @@ import { isInteger, merge } from '../helpers/strict-type-checks';
 import { SeriesAreaPaneView } from '../views/pane/area-pane-view';
 import { SeriesBarsPaneView } from '../views/pane/bars-pane-view';
 import { SeriesBaselinePaneView } from '../views/pane/baseline-pane-view';
+import { SeriesBrokenAreaPaneView } from '../views/pane/broken-area-pane-view';
 import { SeriesCandlesticksPaneView } from '../views/pane/candlesticks-pane-view';
+import { SeriesCloudAreaPaneView } from '../views/pane/cloud-area-pane-view';
 import { SeriesHistogramPaneView } from '../views/pane/histogram-pane-view';
 import { IPaneView } from '../views/pane/ipane-view';
 import { IUpdatablePaneView } from '../views/pane/iupdatable-pane-view';
@@ -37,6 +39,7 @@ import { PriceDataSource } from './price-data-source';
 import { PriceLineOptions } from './price-line-options';
 import { PriceRangeImpl } from './price-range-impl';
 import { PriceScale } from './price-scale';
+import { convertPriceRangeFromLog } from './price-scale-conversions';
 import { SeriesBarColorer } from './series-bar-colorer';
 import { createSeriesPlotList, SeriesPlotList, SeriesPlotRow } from './series-data';
 import { InternalSeriesMarker, SeriesMarker } from './series-markers';
@@ -81,6 +84,8 @@ export interface SeriesDataAtTypeMap {
 	Candlestick: BarPrices;
 	Area: BarPrice;
 	Baseline: BarPrice;
+	CloudArea: BarPrice;
+	BrokenArea: BarPrice;
 	Line: BarPrice;
 	Histogram: BarPrice;
 }
@@ -302,6 +307,38 @@ export class Series<T extends SeriesType = SeriesType> extends PriceDataSource i
 		this.model().updateSource(this);
 	}
 
+	public getPriceLine(cursorPrice: number, cursorIndex?: number): CustomPriceLine | null {
+		const priceScale = this.priceScale();
+		let priceRange = priceScale.priceRange() as PriceRangeImpl;
+
+		if (priceScale.isLog()) {
+			priceRange = convertPriceRangeFromLog(priceRange, priceScale.logFormula());
+		}
+
+		let magnetPercent = 0.0001;
+
+		if (priceRange) {
+			const lookAroundPercent = 16 / priceScale.height();
+			const percentRange = Math.abs(priceRange.length()) / cursorPrice;
+			magnetPercent = lookAroundPercent * percentRange;
+		}
+
+		for (let i = 0; i < this._customPriceLines.length; i++) {
+			const customPriceLine = this._customPriceLines[i];
+			const { price, index } = this._customPriceLines[i].options();
+
+			if ((typeof cursorIndex === 'undefined' || typeof index === 'undefined' || cursorIndex >= index) && Math.abs(Math.abs(price - cursorPrice) / cursorPrice) < Math.abs(magnetPercent)) {
+				return customPriceLine;
+			}
+		}
+
+		return null;
+	}
+
+	public removeAllPriceLines(): void {
+		this._customPriceLines.splice(0, this._customPriceLines.length);
+	}
+
 	public seriesType(): T {
 		return this._seriesType;
 	}
@@ -468,6 +505,10 @@ export class Series<T extends SeriesType = SeriesType> extends PriceDataSource i
 		return this._options.visible;
 	}
 
+	public setExtensionsBoundaries(extensionsBoundaries: { [id: string]: number }): void {
+		(this._paneView as SeriesBrokenAreaPaneView).setExtensionsBoundaries(extensionsBoundaries);
+	}
+
 	private _isOverlay(): boolean {
 		const priceScale = this.priceScale();
 		return !isDefaultPriceScale(priceScale.id());
@@ -616,6 +657,16 @@ export class Series<T extends SeriesType = SeriesType> extends PriceDataSource i
 
 			case 'Area': {
 				this._paneView = new SeriesAreaPaneView(this as Series<'Area'>, this.model());
+				break;
+			}
+
+			case 'CloudArea': {
+				this._paneView = new SeriesCloudAreaPaneView(this as Series<'CloudArea'>, this.model());
+				break;
+			}
+
+			case 'BrokenArea': {
+				this._paneView = new SeriesBrokenAreaPaneView(this as Series<'BrokenArea'>, this.model());
 				break;
 			}
 

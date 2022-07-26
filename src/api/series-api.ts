@@ -170,7 +170,23 @@ export class SeriesApi<TSeriesType extends SeriesType> implements ISeriesApi<TSe
 		this._series.removePriceLine((line as PriceLine).priceLine());
 	}
 
+	public removeAllPriceLines(): void {
+		this._series.removeAllPriceLines();
+	}
+
+	public getPriceLine(price: number, index?: number): IPriceLine | void {
+		const priceLine = this._series.getPriceLine(price, index);
+
+		if (priceLine) {
+			return new PriceLine(priceLine);
+		}
+	}
+
 	public seriesType(): TSeriesType {
 		return this._series.seriesType();
+	}
+
+	public setExtensionsBoundaries(extensionsBoundaries: { [id: string]: number }): void {
+		return this._series.setExtensionsBoundaries(extensionsBoundaries);
 	}
 }

@@ -6,6 +6,7 @@ import { Pane } from './pane';
 import { PriceScale } from './price-scale';
 
 export interface IDataSource {
+	seriesType?(): string;
 	zorder(): number | null;
 	setZorder(value: number): void;
 	priceScale(): PriceScale | null;

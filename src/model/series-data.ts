@@ -20,11 +20,20 @@ export interface CandlestickPlotRow extends PlotRow {
 	readonly wickColor?: string;
 }
 
+export interface BrokenAreaPlotRow extends PlotRow {
+	readonly color?: string;
+	readonly label?: string;
+	readonly extendRight?: boolean;
+	readonly id?: string;
+}
+
 export interface SeriesPlotRowTypeAtTypeMap {
 	Bar: BarPlotRow;
 	Candlestick: CandlestickPlotRow;
 	Area: PlotRow;
 	Baseline: PlotRow;
+	CloudArea: PlotRow;
+	BrokenArea: BrokenAreaPlotRow;
 	Line: LinePlotRow;
 	Histogram: HistogramPlotRow;
 }

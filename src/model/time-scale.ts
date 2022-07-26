@@ -21,6 +21,7 @@ import {
 	LogicalRange,
 	SeriesItemsIndexesRange,
 	TickMarkWeight,
+	TimedRange,
 	TimedValue,
 	TimePoint,
 	TimePointIndex,
@@ -418,6 +419,27 @@ export class TimeScale {
 			const deltaFromRight = baseIndex + this._rightOffset - index;
 			const coordinate = this._width - (deltaFromRight + 0.5) * this._barSpacing - 1;
 			points[i].x = coordinate as Coordinate;
+		}
+	}
+
+	public indexesToCoordinatesExtensions<T extends TimedRange>(points: T[], extensionsBoundaries: {[id: string]: number }, visibleRange?: SeriesItemsIndexesRange): void {
+		const baseIndex = this.baseIndex();
+		const indexFrom = (visibleRange === undefined) ? 0 : visibleRange.from;
+		const indexTo = (visibleRange === undefined) ? points.length : visibleRange.to;
+
+		for (let i = indexFrom; i < indexTo; i++) {
+			const index = points[i].time;
+			let deltaFromRight = baseIndex + this._rightOffset - index;
+			let coordinate = this._width - (deltaFromRight + 0.5) * this._barSpacing - 1;
+			points[i].x = coordinate as Coordinate;
+
+			if (typeof points[i].id !== 'undefined' && extensionsBoundaries[points[i].id as string]) {
+				deltaFromRight = baseIndex + this._rightOffset - extensionsBoundaries[points[i].id as string];
+				coordinate = this._width - (deltaFromRight + 0.5) * this._barSpacing - 1;
+				points[i].end = coordinate as Coordinate;
+			} else {
+				points[i].end = this._width as Coordinate;
+			}
 		}
 	}
 
