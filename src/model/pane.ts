@@ -388,7 +388,10 @@ export class Pane implements IDestroyable {
 			this._overlaySourcesByScaleId.set(priceScaleId, overlaySources);
 		}
 
-		priceScale.addDataSource(source);
+		if (typeof source.seriesType === 'undefined' || source.seriesType() !== 'BrokenArea') {
+			priceScale.addDataSource(source);
+		}
+
 		source.setPriceScale(priceScale);
 
 		source.setZorder(zOrder);

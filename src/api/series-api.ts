@@ -201,4 +201,8 @@ export class SeriesApi<TSeriesType extends SeriesType> implements ISeriesApi<TSe
 	public seriesType(): TSeriesType {
 		return this._series.seriesType();
 	}
+
+	public setExtensionsBoundaries(extensionsBoundaries: { [id: string]: number }): void {
+		return this._series.setExtensionsBoundaries(extensionsBoundaries);
+	}
 }

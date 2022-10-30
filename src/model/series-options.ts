@@ -286,6 +286,34 @@ export interface AreaStyleOptions {
 	lastPriceAnimation: LastPriceAnimationMode;
 }
 
+export interface CloudAreaStyleOptions {
+	positiveColor: string;
+	negativeColor: string;
+	higherLineColor: string;
+	higherLineStyle: LineStyle;
+	higherLineWidth: LineWidth;
+	higherLineType: LineType;
+	lowerLineColor: string;
+	lowerLineStyle: LineStyle;
+	lowerLineWidth: LineWidth;
+	lowerLineType: LineType;
+	crosshairMarkerVisible: boolean;
+	crosshairMarkerRadius: number;
+	crosshairMarkerBorderColor: string;
+	crosshairMarkerBackgroundColor: string;
+}
+
+export interface BrokenAreaStyleOptions {
+	color: string;
+	strokeColor: string;
+	strokeWidth: number;
+	compositeOperation: string;
+	crosshairMarkerVisible: boolean;
+	crosshairMarkerRadius: number;
+	crosshairMarkerBorderColor: string;
+	crosshairMarkerBackgroundColor: string;
+}
+
 /**
  * Represents a type of priced base value of baseline series type.
  */
@@ -750,6 +778,14 @@ export type BaselineSeriesOptions = SeriesOptions<BaselineStyleOptions>;
 export type BaselineSeriesPartialOptions = SeriesPartialOptions<BaselineStyleOptions>;
 
 /**
+ * Structure describing cloud area series options.
+ */
+export type CloudAreaSeriesOptions = SeriesOptions<CloudAreaStyleOptions>;
+export type CloudAreaSeriesPartialOptions = SeriesPartialOptions<CloudAreaStyleOptions>;
+export type BrokenAreaSeriesOptions = SeriesOptions<BrokenAreaStyleOptions>;
+export type BrokenAreaSeriesPartialOptions = SeriesPartialOptions<BrokenAreaStyleOptions>;
+
+/**
  * Represents bar series options.
  */
 export type BarSeriesOptions = SeriesOptions<BarStyleOptions>;
@@ -807,6 +843,8 @@ export interface SeriesOptionsMap {
 	 * The type of baseline series options.
 	 */
 	Baseline: BaselineSeriesOptions;
+	CloudArea: CloudAreaSeriesOptions;
+	BrokenArea: BrokenAreaSeriesOptions;
 	/**
 	 * The type of line series options.
 	 */
@@ -839,6 +877,8 @@ export interface SeriesPartialOptionsMap {
 	 * The type of baseline series partial options.
 	 */
 	Baseline: BaselineSeriesPartialOptions;
+	CloudArea: CloudAreaSeriesPartialOptions;
+	BrokenArea: BrokenAreaSeriesPartialOptions;
 	/**
 	 * The type of line series partial options.
 	 */

@@ -7,7 +7,9 @@ import {
 	AreaStyleOptions,
 	BarStyleOptions,
 	BaselineStyleOptions,
+	BrokenAreaStyleOptions,
 	CandlestickStyleOptions,
+	CloudAreaStyleOptions,
 	HistogramStyleOptions,
 	LineStyleOptions,
 } from './series-options';
@@ -49,6 +51,12 @@ export class SeriesBarColorer {
 
 			case 'Area':
 				return this._areaStyle(seriesOptions as AreaStyleOptions);
+
+			case 'CloudArea':
+				return this._cloudAreaStyle(seriesOptions as CloudAreaStyleOptions);
+
+			case 'BrokenArea':
+				return this._brokenAreaStyle(seriesOptions as BrokenAreaStyleOptions);
 
 			case 'Baseline':
 				return this._baselineStyle(seriesOptions as BaselineStyleOptions, barIndex, precomputedBars);
@@ -123,6 +131,20 @@ export class SeriesBarColorer {
 		return {
 			...emptyResult,
 			barColor: isAboveBaseline ? baselineStyle.topLineColor : baselineStyle.bottomLineColor,
+		};
+	}
+
+	private _cloudAreaStyle(cloudAreaStyle: CloudAreaStyleOptions): BarColorerStyle {
+		return {
+			...emptyResult,
+			barColor: cloudAreaStyle.higherLineColor,
+		};
+	}
+
+	private _brokenAreaStyle(brokenAreaStyle: BrokenAreaStyleOptions): BarColorerStyle {
+		return {
+			...emptyResult,
+			barColor: brokenAreaStyle.color,
 		};
 	}
 

@@ -252,6 +252,14 @@ export interface ISeriesApi<TSeriesType extends SeriesType> {
 	removePriceLine(line: IPriceLine): void;
 
 	/**
+	 * Removes all existing price line
+	 */
+	removeAllPriceLines(): IPriceLine | void;
+
+	/**
+	 * Get price line at (or near) a given price
+	 */
+	getPriceLine(price: number, index?: number): IPriceLine | void;
 	 * Creates a new box.
 	 *
 	 * @param options - Any subset of options.
@@ -301,4 +309,5 @@ export interface ISeriesApi<TSeriesType extends SeriesType> {
 	 * ```
 	 */
 	seriesType(): TSeriesType;
+	setExtensionsBoundaries(extensionsBoundaries: { [id: string]: number }): void;
 }

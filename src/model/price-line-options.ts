@@ -1,3 +1,4 @@
+import { TimePointIndex } from './time-data';
 import { LineStyle, LineWidth } from '../renderers/draw-line';
 
 /**
@@ -10,6 +11,7 @@ export interface PriceLineOptions {
 	 * @defaultValue `0`
 	 */
 	price: number;
+	index?: TimePointIndex;
 	/**
 	 * Price line's color.
 	 *

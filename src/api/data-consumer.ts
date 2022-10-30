@@ -72,6 +72,20 @@ export interface LineData extends SingleValueData {
 	color?: string;
 }
 
+export interface CloudAreaData {
+	time: Time;
+
+	higherValue: number;
+	lowerValue: number;
+}
+
+export interface BrokenCloudAreaData extends CloudAreaData {
+	color?: string;
+	label?: string;
+	extendRight?: boolean;
+	id?: string;
+}
+
 /**
  * Structure describing a single item of data for histogram series
  */
@@ -138,11 +152,11 @@ export interface CandlestickData extends OhlcData {
 }
 
 export function isWhitespaceData(data: SeriesDataItemTypeMap[SeriesType]): data is WhitespaceData {
-	return (data as Partial<BarData>).open === undefined && (data as Partial<LineData>).value === undefined;
+	return (data as Partial<CloudAreaData>).lowerValue === undefined && (data as Partial<BarData>).open === undefined && (data as Partial<LineData>).value === undefined;
 }
 
-export function isFulfilledData(data: SeriesDataItemTypeMap[SeriesType]): data is (BarData | LineData | HistogramData) {
-	return (data as Partial<BarData>).open !== undefined || (data as Partial<LineData>).value !== undefined;
+export function isFulfilledData(data: SeriesDataItemTypeMap[SeriesType]): data is (BarData | LineData | HistogramData | CloudAreaData | BrokenCloudAreaData) {
+	return (data as Partial<CloudAreaData>).lowerValue !== undefined || (data as Partial<BarData>).open !== undefined || (data as Partial<LineData>).value !== undefined;
 }
 
 /**
@@ -175,6 +189,14 @@ export interface SeriesDataItemTypeMap {
 	 * The types of histogram series data.
 	 */
 	Histogram: HistogramData | WhitespaceData;
+	/*
+		The types of cloud area series data.
+	*/
+	CloudArea: CloudAreaData | WhitespaceData;
+	/*
+		The types of broken area series data.
+	*/
+	BrokenArea: BrokenCloudAreaData | WhitespaceData;
 }
 
 export interface DataUpdatesConsumer<TSeriesType extends SeriesType> {

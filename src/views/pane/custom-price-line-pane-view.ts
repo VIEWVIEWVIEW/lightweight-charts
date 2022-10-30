@@ -26,8 +26,15 @@ export class CustomPriceLinePaneView extends SeriesHorizontalLinePaneView {
 			return;
 		}
 
+		let x;
+
+		if (lineOptions.index !== undefined) {
+			x = this._model.timeScale().indexToCoordinate(lineOptions.index);
+		}
+
 		data.visible = true;
 		data.y = y;
+		data.x = x;
 		data.color = lineOptions.color;
 		data.width = width;
 		data.height = height;

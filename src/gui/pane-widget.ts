@@ -282,7 +282,12 @@ export class PaneWidget implements IDestroyable, MouseEventHandlers {
 
 		if (this._clicked.hasListeners()) {
 			const currentTime = this._model().crosshairSource().appliedIndex();
-			this._clicked.fire(currentTime, { x, y });
+			this._clicked.fire(currentTime, {
+				x,
+				y,
+				shiftKey: event.shiftKey,
+				ctrlKey: event.ctrlKey,
+			});
 		}
 	}
 

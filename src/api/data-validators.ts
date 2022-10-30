@@ -68,6 +68,10 @@ function getChecker(type: SeriesType): Checker {
 		case 'Line':
 		case 'Histogram':
 			return checkLineItem.bind(null, type);
+
+		case 'CloudArea':
+		case 'BrokenArea':
+			return checkCloudAreaItem.bind(null, type);
 	}
 }
 
@@ -107,4 +111,19 @@ function checkLineItem(type: 'Area' | 'Baseline' | 'Line' | 'Histogram', lineIte
 		// eslint-disable-next-line @typescript-eslint/tslint/config
 		typeof lineItem.value === 'number',
 		`${type} series item data value must be a number, got=${typeof lineItem.value}, value=${lineItem.value}`);
+}
+
+function checkCloudAreaItem(type: 'CloudArea' | 'BrokenArea', lineItem: SeriesDataItemTypeMap[typeof type]): void {
+	if (!isFulfilledData(lineItem)) {
+		return;
+	}
+
+	assert(
+		// eslint-disable-next-line @typescript-eslint/tslint/config
+		typeof lineItem.higherValue === 'number',
+		`${type} series item data higher value must be a number, got=${typeof lineItem.higherValue}, value=${lineItem.higherValue}`);
+	assert(
+		// eslint-disable-next-line @typescript-eslint/tslint/config
+		typeof lineItem.lowerValue === 'number',
+		`${type} series item data lower value must be a number, got=${typeof lineItem.lowerValue}, value=${lineItem.lowerValue}`);
 }
